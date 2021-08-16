@@ -1,0 +1,46 @@
+@page "/todo"
+
+@using BlazorDemo.Data
+
+<h1>Todo (@todos.Count(todo => !todo.Completed) Pending, @todos.Count Total)</h1>
+<div class="input-group my-4">
+    <input class="form-control" placeholder="Something todo" @bind="newTodo" />
+    <button class="btn btn-success" disabled="@string.IsNullOrWhiteSpace(newTodo)" @onclick="AddTodo">
+        <span class="oi oi-plus" aria-hidden="true"></span>
+    </button>
+</div>
+<div>
+    @foreach (var todo in todos)
+    {
+        <div class="input-group mt-2" @key="todo.ID">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" @bind="todo.Completed" />
+            </div>
+            <input class="form-control" @bind="todo.Name" />
+            <button class="btn btn-danger" @onclick="@(() => RemoveTodo(todo))">
+                <span class="oi oi-trash" aria-hidden="true"></span>
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    private IList<TodoItem> todos = new List<TodoItem>();
+    private string newTodo;
+
+    private void AddTodo()
+    {
+        var newID = 1;
+        if (todos.Count > 0)
+        {
+            newID = todos.Last().ID + 1;
+        }
+        todos.Add(new TodoItem { ID = newID, Name = newTodo.Trim() });
+        newTodo = string.Empty;
+    }
+
+    private void RemoveTodo(TodoItem uselessTodo)
+    {
+        todos.Remove(uselessTodo);
+    }
+}

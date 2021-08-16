@@ -1,16 +1,41 @@
-﻿@page "/counter"
+@page "/counter"
 
 <h1>Counter</h1>
-
 <p>Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<div class="d-flex mb-2">
+    <button class="btn btn-secondary" @onclick="DecreaseStep">
+        <span class="oi oi-minus" aria-hidden="true"></span>
+    </button>
+    <button class="btn btn-outline-dark mx-2" disabled>
+        @step
+    </button>
+    <button class="btn btn-secondary" @onclick="IncreaseStep">
+        <span class="oi oi-plus" aria-hidden="true"></span>
+    </button>
+</div>
+<button class="btn btn-primary" @onclick="AlterCount">Click me</button>
 
 @code {
     private int currentCount = 0;
 
-    private void IncrementCount()
+    // optional parameter, 1 is the default if not provided
+    [Parameter]
+    public int step { get; set; } = 1;
+
+    private void DecreaseStep()
     {
-        currentCount++;
+        step--;
+        if (step == 0) step--;
+    }
+
+    private void IncreaseStep()
+    {
+        step++;
+        if (step == 0) step++;
+    }
+
+    private void AlterCount()
+    {
+        currentCount += step;
     }
 }
